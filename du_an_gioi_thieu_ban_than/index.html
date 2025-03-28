@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
   <!-- particles.js library -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     :root {
       --primary-color: #ff416c;
@@ -249,7 +251,6 @@
         <h2>3. Mục Tiêu và Kỳ Vọng</h2>
         <p>Có một điều tôi nhất định sẽ làm sau khi ra trường sau khi đi làm một thời gian và tôi sẽ mua 1 chiếc xe vjp pro hơnhơn, 1 một con đt samsung...</p>
       </section>
-    
       <section class="section">
         <h2>4. Lời Kết</h2>
         <p>Nếu bạn cảm thấy có điểm chung và cùng chia sẻ những giá trị sống tích cực, rất mong được làm quen và cùng nhau tạo nên những kỷ niệm đẹp. Hãy nhắn cho tôi bên dưới hoặc ib thẳng để chúng ta có thể trò chuyện và tìm hiểu thêm.</p>
@@ -272,6 +273,9 @@
   </div>
 
   <script>
+    // Khởi tạo EmailJS với public key của bạn
+    emailjs.init("4OQAqbNTwSeMbQUcX");
+
     // Hiệu ứng gõ chữ cho header
     const typewriterElement = document.getElementById('typewriter');
     const headerText = "Giới Thiệu Về Bản Thân";
@@ -377,7 +381,7 @@
       "retina_detect": true
     });
 
-    // Xử lý Form Liên Hệ
+    // Xử lý Form Liên Hệ sử dụng EmailJS
     const contactForm = document.getElementById('contactForm');
     const formFeedback = document.getElementById('formFeedback');
     contactForm.addEventListener('submit', function(e) {
@@ -386,16 +390,26 @@
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const message = document.getElementById('message').value.trim();
+      
       if(!name || !email || !message) {
         formFeedback.textContent = "Vui lòng điền đầy đủ thông tin.";
         return;
       }
-      // Mô phỏng gửi dữ liệu (AJAX giả lập)
+
       formFeedback.textContent = "Đang gửi tin nhắn...";
-      setTimeout(() => {
+
+      emailjs.send("service_i4tl7m4", "template_2v52xwf", {
+        from_name: name,
+        from_email: email,
+        message: message
+      })
+      .then(() => {
         formFeedback.textContent = "Tin nhắn đã được gửi thành công!";
         contactForm.reset();
-      }, 1500);
+      })
+      .catch(() => {
+        formFeedback.textContent = "Gửi tin nhắn thất bại, vui lòng thử lại.";
+      });
     });
   </script>
 </body>
